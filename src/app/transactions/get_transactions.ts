@@ -1,7 +1,7 @@
 import { gql, QueryHookOptions, useQuery } from '@apollo/client';
 import { Transaction } from '../../framework/types/types';
 
-const TransactionsQuery = gql`
+export const TransactionsQuery = gql`
   query GetTransactions($userId: ID!) {
     transactions: transactions(input: { userId: $userId }) {
       id
