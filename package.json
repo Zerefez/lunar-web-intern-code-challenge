@@ -2,13 +2,16 @@
   "name": "lunar-web-intern-code-challenge",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://zerefez.github.io/lunar-web-intern-code-challenge",
   "scripts": {
     "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prettier:all": "prettier --write '**/*.{ts,tsx,js,jsx,json,md,html,yaml,graphql}'",
-    "lint:eslint": "eslint . --ext .ts --ext .tsx"
+    "lint:eslint": "eslint . --ext .ts --ext .tsx",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

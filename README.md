@@ -74,3 +74,59 @@ We expect you to spend up to eight hours on this challenge — and remember, we 
 Push your solution to a public GitHub repo (or private and invite us) and share the link, or zip the folder and email it.
 
 Good luck – and have fun! ✨
+
+---
+
+## 🚀 Deployment to GitHub Pages
+
+This project is configured for easy deployment to GitHub Pages using two methods:
+
+### Method 1: Manual Deployment (using gh-pages)
+
+1. **Update the homepage URL**: In `package.json`, replace `YOUR_GITHUB_USERNAME` with your actual GitHub username:
+   ```json
+   "homepage": "https://YOUR_GITHUB_USERNAME.github.io/lunar-web-intern-code-challenge"
+   ```
+
+2. **Deploy manually**:
+   ```bash
+   npm run deploy
+   ```
+
+This will build the project and push it to the `gh-pages` branch of your repository.
+
+### Method 2: Automatic Deployment (using GitHub Actions)
+
+The project includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) that automatically deploys to GitHub Pages when you push to the main/master branch.
+
+**Setup steps:**
+
+1. **Push your code to GitHub**:
+   ```bash
+   git add .
+   git commit -m "Add deployment configuration"
+   git push origin main
+   ```
+
+2. **Enable GitHub Pages**:
+   - Go to your repository on GitHub
+   - Navigate to **Settings** → **Pages**
+   - Under **Source**, select "Deploy from a branch"
+   - Choose the `gh-pages` branch
+   - Click **Save**
+
+3. **Configure repository settings** (if using GitHub Actions):
+   - Go to **Settings** → **Actions** → **General**
+   - Under **Workflow permissions**, select "Read and write permissions"
+   - Check "Allow GitHub Actions to create and approve pull requests"
+
+### 📝 Important Notes
+
+- Make sure to replace `YOUR_GITHUB_USERNAME` in the homepage URL with your actual GitHub username
+- The app will be available at: `https://YOUR_GITHUB_USERNAME.github.io/lunar-web-intern-code-challenge`
+- It may take a few minutes for changes to appear after deployment
+- The GitHub Actions workflow will only deploy from the main/master branch
+
+### 🔧 Local Development
+
+The app uses a legacy OpenSSL provider for compatibility. If you encounter build issues, make sure you're using Node.js version 20.14.0 (as specified in `.nvmrc`).

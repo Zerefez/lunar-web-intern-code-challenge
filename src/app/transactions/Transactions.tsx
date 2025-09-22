@@ -1,6 +1,16 @@
 import * as React from 'react';
 import { Transaction } from '../../framework/types/types';
-import { SortConfig, SortField, SortOrder, TransactionHeader, TransactionModal, TransactionTable } from './components';
+import {
+  AppState,
+  SortConfig,
+  SortField,
+  SortOrder,
+  Toast,
+  TransactionHeader,
+  TransactionModal,
+  TransactionSkeleton,
+  TransactionTable
+} from './components';
 import { useDeleteAuthorizationMutation } from './delete_authorization';
 import { useTransactionsQuery } from './get_transactions';
 
@@ -23,7 +33,7 @@ export const Transactions = ({ userId }: TransactionsProps) => {
 
   const [selectedTransaction, setSelectedTransaction] = React.useState<Transaction | null>(null);
   
-  const { data, loading, error } = useTransactionsQuery({
+  const { data, loading, error, refetch } = useTransactionsQuery({
     variables: {
       userId,
     },
@@ -78,13 +88,17 @@ export const Transactions = ({ userId }: TransactionsProps) => {
       });
   }, [data?.transactions, sortConfig]);
 
+  const [deleteError, setDeleteError] = React.useState<string | null>(null);
+
   const handleDeleteAuthorization = async (transactionId: string) => {
     try {
+      setDeleteError(null);
       await deleteAuthorization({
         variables: { transactionId },
       });
     } catch (error) {
       console.error('Failed to delete authorization:', error);
+      setDeleteError('Failed to delete transaction');
     }
   };
 
@@ -102,12 +116,40 @@ export const Transactions = ({ userId }: TransactionsProps) => {
     return sortConfig.order === 'desc' ? '↓' : '↑';
   };
 
+  const handleRetry = async () => {
+    try {
+      await refetch();
+    } catch (error) {
+      console.error('Failed to refetch transactions:', error);
+    }
+  };
+
+  // Handle different states
   if (loading && !data) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <TransactionHeader sortConfig={sortConfig} onSortChange={handleSortChange} />
+        <TransactionSkeleton />
+      </>
+    );
   }
 
   if (error) {
-    return <div>An error occurred 😭</div>;
+    return (
+      <>
+        <TransactionHeader sortConfig={sortConfig} onSortChange={handleSortChange} />
+        <AppState type="error" message="Failed to load transactions" onRetry={handleRetry} />
+      </>
+    );
+  }
+
+  if (processedTransactions.length === 0) {
+    return (
+      <>
+        <TransactionHeader sortConfig={sortConfig} onSortChange={handleSortChange} />
+        <AppState type="empty" />
+      </>
+    );
   }
 
   return (
@@ -131,6 +173,11 @@ export const Transactions = ({ userId }: TransactionsProps) => {
         onClose={() => setSelectedTransaction(null)}
         onDelete={handleDeleteAuthorization}
         deleteLoading={deleteLoading}
+      />
+      
+      <Toast 
+        message={deleteError}
+        onClose={() => setDeleteError(null)}
       />
     </>
   );
