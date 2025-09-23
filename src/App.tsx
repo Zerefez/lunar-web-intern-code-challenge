@@ -1,17 +1,30 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
-import { LIGHT_THEME } from './framework/theme';
-import { Transactions } from './app/transactions/Transactions';
-import { Sidebar } from './app/sidebar/Sidebar';
 import { Home } from './app/home/Home';
+import { Sidebar } from './app/sidebar/Sidebar';
+import { Transactions } from './app/transactions/Transactions';
+import { DARK_THEME, LIGHT_THEME } from './framework/theme';
 
 export const App = () => {
+  const [isDark, setIsDark] = React.useState(() => {
+    const saved = localStorage.getItem('theme-mode');
+    return saved ? saved === 'dark' : false;
+  });
+
+  const toggleTheme = () => {
+    const newTheme = !isDark;
+    setIsDark(newTheme);
+    localStorage.setItem('theme-mode', newTheme ? 'dark' : 'light');
+  };
+
+  const currentTheme = isDark ? DARK_THEME : LIGHT_THEME;
+
   return (
-    <ThemeProvider theme={LIGHT_THEME}>
+    <ThemeProvider theme={currentTheme}>
       <BrowserRouter>
         <StyledApp>
-          <Sidebar />
+          <Sidebar isDark={isDark} onToggleTheme={toggleTheme} />
           <StyledMain>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -33,6 +46,7 @@ const StyledApp = styled.div`
   height: 100vh;
   overflow: hidden;
   font-family: sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 `;
 
 const StyledMain = styled.main`
@@ -40,4 +54,5 @@ const StyledMain = styled.main`
   padding: 32px;
   flex-grow: 1;
   overflow: auto;
+  transition: background-color 0.3s ease;
 `;

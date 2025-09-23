@@ -2,9 +2,15 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { LunarLogo } from '../../framework/components/LunarLogo';
+import { ThemeToggle } from '../components/ThemeToggle';
 import { Navigation } from './Navigation';
 
-export const Sidebar = () => {
+interface SidebarProps {
+  isDark: boolean;
+  onToggleTheme: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isDark, onToggleTheme }) => {
   return (
     <StyledSidebar aria-label="App sidebar">
       <StyledLunarLogo to="/" tabIndex={-1} aria-label="Home">
@@ -12,6 +18,9 @@ export const Sidebar = () => {
       </StyledLunarLogo>
       <StyledDivider aria-hidden="true" />
       <Navigation />
+      <ThemeToggleContainer >
+        <ThemeToggle isDark={isDark} onToggle={onToggleTheme} />
+      </ThemeToggleContainer>
     </StyledSidebar>
   );
 };
@@ -53,3 +62,9 @@ const StyledDivider = styled.div(
     background-color: ${theme.surfaceStroke};
   `
 );
+
+const ThemeToggleContainer = styled.div`
+  display: flex;
+  margin-top: auto;
+  padding: 8px;
+`;

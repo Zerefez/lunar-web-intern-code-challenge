@@ -10,7 +10,7 @@
     "eject": "react-scripts eject",
     "prettier:all": "prettier --write '**/*.{ts,tsx,js,jsx,json,md,html,yaml,graphql}'",
     "lint:eslint": "eslint . --ext .ts --ext .tsx",
-    "predeploy": "npm run build",
+    "predeploy": "pnpm run build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
